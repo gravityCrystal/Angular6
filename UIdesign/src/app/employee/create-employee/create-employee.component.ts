@@ -8,8 +8,34 @@ import { FormGroup, FormControl, Validators, FormBuilder } from "@angular/forms"
 })
 export class CreateEmployeeComponent implements OnInit {
   employeeForm: FormGroup;
-  constructor(private formBuilder: FormBuilder) {}
-
+  constructor(private formBuilder: FormBuilder) { }
+  validationMessages = {
+    'fullName': {
+      'required': 'Enter fullName',
+      'minLength': '6',
+      'maxLength': '10'
+    },
+    'email': {
+      'required': 'Enter email',
+      'email': 'Enter a valid email'
+    },
+    'skillName': {
+      'required': 'Enter skill'
+    },
+    'proficiency': {
+      'required': 'Enter proficiemncy'
+    },
+    'experienceInYears': {
+      'required': 'Enter experince'
+    }
+  }
+  formErrors = {
+    'fullName': '',
+    'email': '',
+    'skillName': '',
+    'experienceInYears': '',
+    'proficiency': ''
+  }
   ngOnInit() {
     /// First way of creating forms
 
@@ -29,11 +55,11 @@ export class CreateEmployeeComponent implements OnInit {
         "",
         [Validators.required, Validators.minLength(3), Validators.maxLength(10)]
       ],
-      email: ["", [Validators.email, Validators.maxLength(30)]],
+      email: ["", [Validators.required, Validators.email, Validators.maxLength(30)]],
       skills: this.formBuilder.group({
         skillName: ["", [Validators.required]],
-        experienceInYears: ["7", [Validators.required]],
-        proficiency: ["beginner", [Validators.required]]
+        experienceInYears: ["", [Validators.required]],
+        proficiency: ["", [Validators.required]]
       })
     });
 
@@ -43,39 +69,10 @@ export class CreateEmployeeComponent implements OnInit {
     // })
   }
 
-  intializeErrors () {
-    let formErrors= {
-      'fullName':'',
-      'email':'',
-      'skillName':'',
-      'experienceInYears': '',
-      'proficiency': ''
-    }
-    let validationMessages ={
-      'fullName': {
-        'required': 'Enter fullName',
-        'minLength':'6',
-        'maxLength':'10'
-      },
-      'email': {
-        'required': 'Enter email'
-      },
-      'skillName': {
-        'required': 'Enter skill'
-      },
-      'proficiency': {
-        'required': 'Enter proficiemncy'
-      },
-      'experienceInYears': {
-        'required':'Enter experince'
-      }
-    }
-  }
-
   onSubmit() {
     // console.log(this.employeeForm.get('fullName').value, this.employeeForm.controls.fullName.value);
-    console.log(this.employeeForm.value,
-      this.employeeForm.get('fullName').errors);
+    // console.log(this.employeeForm.value,
+    //   this.employeeForm.get('fullName').errors);
   }
   loadData() {
     this.employeeForm.setValue({
@@ -90,20 +87,30 @@ export class CreateEmployeeComponent implements OnInit {
   }
 
 
-  checkData (){
-    this.employeeForm.valueChanges.subscribe(value =>{
+  checkData() {
+    this.employeeForm.valueChanges.subscribe(value => {
       console.log(value);
     })
   }
 
-  logAllData(group:FormGroup): void {
+  logValidationData(group: FormGroup): void {
     Object.keys(group.controls).forEach((key: string) => {
       const abstractControl = group.get(key);
       if (abstractControl instanceof FormGroup) {
-        this.logAllData(abstractControl);
+        this.logValidationData(abstractControl);
         // console.log('Key' +key, 'Value--', abstractControl.value)
-      }else {
-        console.log('Key--' +key, 'Value--', abstractControl.value)
+      } else {
+        this.formErrors[key] = '';
+        if (abstractControl && !abstractControl.valid) {
+          const validationMessages = this.validationMessages[key];
+          // console.log(validationMessages);
+          // console.log(abstractControl.errors);
+          for  (const errorKey in abstractControl.errors) {
+                this.formErrors[key] += validationMessages[errorKey] + "  "; 
+          }
+          console.log(this.formErrors);
+        }
+        // console.log('Key--' +key, 'Value--', abstractControl.value)
       }
     });
   }

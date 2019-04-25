@@ -1,78 +1,141 @@
-<form class="form-horizontal" [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <h3 class="panel-title">Create Employee</h3>
-      </div>
-      <div class="panel-body">
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="fullName">Full Name</label>
-          <div class="col-sm-12">
-            <input [ngClass]="{'has-error':(((employeeForm.get('fullName').touched ||
-            employeeForm.get('fullName').dirty) &&
-            employeeForm.get('fullName').errors))}" id="fullName" type="text" class="form-control" formControlName='fullName'>
-            <span class="help-block"
-            *ngIf="((employeeForm.get('fullName').touched ||
-                     employeeForm.get('fullName').dirty) &&
-                     employeeForm.get('fullName').errors)">
-        <span *ngIf="employeeForm.get('fullName').errors.required">
-          Full Name is required
-        </span>
-        <span *ngIf="employeeForm.get('fullName').errors.minlength ||
-                     employeeForm.get('fullName').errors.maxlength">
-            Full Name must be greater than 2 characters and less than 10 characters
-        </span>
-      </span>
-          </div>
-        </div>
-  
-        <div class="form-group">
-          <label class="col-sm-2 control-label" for="email">Email</label>
-          <div class="col-sm-12">
-            <input id="email" type="text" class="form-control" formControlName='email'>
-          </div>
-        </div>
-        <div formGroupName="skills">
-          
-            <div class="form-group">
-              <label class="col-sm-2 control-label" for="skillName">
-                Skill
-              </label>
-              <div class="col-sm-3" style="margin-bottom:10px">
-                <input type="text" class="form-control" id="skillName"
-                    placeholder="Name" formControlName="skillName">
-              </div>
-              <div class="col-sm-3">
-                <input type="text" placeholder="Experience in Years"
-                    class="form-control" formControlName="experienceInYears">
-              </div>
-            </div>
-          
-            <div class="form-group">
-              <label class="col-md-2 control-label">Proficiency</label>
-              <div class="col-md-8">
-                <label class="radio-inline">
-                  <input id="proficiency" type="radio" value="beginner"
-                         formControlName="proficiency">Beginner
-                </label>
-                <label class="radio-inline">
-                  <input id="proficiency" type="radio" value="intermediate"
-                         formControlName="proficiency">Intermediate
-                </label>
-                <label class="radio-inline">
-                  <input id="proficiency" type="radio" value="advanced"
-                         formControlName="proficiency">Advanced
-                </label>
-              </div>
-            </div>
-          
-          </div>
-  
-      </div>
-      <div class="panel-footer">
-        <button class="btn btn-primary" type="submit" style="margin-right:10px">Save</button>
-        <button class="btn btn-primary" (click)= "logValidationData(employeeForm)" style="margin-right:10px">Test</button>
-        <button class="btn btn-primary" (click)= "loadData()">Load</button>
-      </div>
+<form
+  class="form-horizontal"
+  [formGroup]="employeeForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Create Employee</h3>
     </div>
-  </form>
-  
+    <div class="panel-body">
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="fullName">Full Name</label>
+        <div class="col-sm-12">
+          <input
+            [ngClass]="{ 'has-error': formErrors.fullName }"
+            id="fullName"
+            type="text"
+            class="form-control"
+            formControlName="fullName"
+            (blur)="logValidationData()"
+          />
+          <span class="help-block">
+            <span>
+              {{ formErrors.fullName }}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="email">Email</label>
+        <div class="col-sm-12">
+          <input
+            [ngClass]="{ 'has-error': formErrors.email }"
+            id="email"
+            type="text"
+            class="form-control"
+            formControlName="email"
+            (blur)="logValidationData()"
+          />
+          <span class="help-block">
+            <span>
+              {{ formErrors.email}}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div formArrayName="skills" *ngFor="let skill of employeeForm.get('skills').controls; let i= index">
+        <div class="form-group" formGroupName="i">
+          <label class="col-sm-2 control-label" for="{{ 'skillName' + i }}">
+            Skill
+          </label>
+          <div class="col-sm-3" style="margin-bottom:10px">
+            <input
+              [ngClass]="{ 'has-error': formErrors.skillName }"
+              type="text"
+              class="form-control"
+              id="{{ 'skillName' + i }}"
+              placeholder="Name"
+              formControlName="skillName"
+              (blur)="logValidationData()"
+            />
+            <span class="help-block">
+              <span>
+                {{ formErrors.skillName }}
+              </span>
+            </span>
+          </div>
+          <div class="col-sm-3">
+            <input
+              [ngClass]="{ 'has-error': formErrors.experienceInYears }"
+              type="text"
+              placeholder="Experience in Years"
+              class="form-control"
+              id="{{'experienceInYears' + i }}"
+              formControlName="experienceInYears"
+              (blur)="logValidationData()"
+            />
+            <span class="help-block">
+              <span>
+                {{ formErrors.experienceInYears }}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-md-2 control-label">Proficiency</label>
+          <div class="col-md-8">
+            <label class="radio-inline">
+              <input
+                id="{{'proficiency'+i}}"
+                type="radio"
+                value="beginner"
+                formControlName="proficiency"
+              />Beginner
+            </label>
+            <label class="radio-inline">
+              <input
+              id="{{'proficiency'+i}}"
+                type="radio"
+                value="intermediate"
+                formControlName="proficiency"
+              />Intermediate
+            </label>
+            <label class="radio-inline">
+              <input
+              id="{{'proficiency'+i}}"
+                type="radio"
+                value="advanced"
+                formControlName="proficiency"
+              />Advanced
+            </label>
+            <span class="help-block">
+              <span>
+                {{ formErrors.proficiency }}
+              </span>
+            </span>
+          </div>
+        </div>      
+      </div>
+      <div class="form-group" >
+          <div class="col-md-offset-2  col-md-4">
+            <button type="button" class="btn btn-primary" (click)="addSkill()"     [disabled]="employeeForm.get('skills').invalid">Add Skill</button>
+          </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+      <button class="btn btn-primary" type="submit" style="margin-right:10px">
+        Reset
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="logValidationData(employeeForm)"
+        style="margin-right:10px"
+      >
+        Test
+      </button>
+      <button class="btn btn-primary" (click)="loadData()">Load</button>
+    </div>
+  </div>
+</form>

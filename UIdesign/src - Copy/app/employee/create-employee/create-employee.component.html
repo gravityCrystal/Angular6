@@ -39,26 +39,19 @@
           />
           <span class="help-block">
             <span>
-              {{ formErrors.email }}
+              {{ formErrors.email}}
             </span>
           </span>
         </div>
       </div>
-      <div
-        formArrayName="skills"
-        *ngFor="let skill of employeeForm.get('skills').controls; let i = index"
-      >
-        <div class="form-group" [formGroupName]="i">
+      <div formArrayName="skills" *ngFor="let skill of employeeForm.get('skills').controls; let i= index">
+        <div class="form-group" formGroupName="i">
           <label class="col-sm-2 control-label" for="{{ 'skillName' + i }}">
             Skill
           </label>
           <div class="col-sm-3" style="margin-bottom:10px">
             <input
-              [ngClass]="{
-                'has-error':
-                  skill.get('skillName').invalid &&
-                  skill.get('skillName').touched
-              }"
+              [ngClass]="{ 'has-error': formErrors.skillName }"
               type="text"
               class="form-control"
               id="{{ 'skillName' + i }}"
@@ -66,120 +59,70 @@
               formControlName="skillName"
               (blur)="logValidationData()"
             />
-            <span
-              class="help-block"
-              *ngIf="
-                skill.get('skillName').errors?.required &&
-                skill.get('skillName').touched
-              "
-            >
-              Skill Name is required
+            <span class="help-block">
+              <span>
+                {{ formErrors.skillName }}
+              </span>
             </span>
           </div>
           <div class="col-sm-3">
             <input
-              [ngClass]="{
-                'has-error':
-                  skill.get('experienceInYears').invalid &&
-                  skill.get('experienceInYears').touched
-              }"
+              [ngClass]="{ 'has-error': formErrors.experienceInYears }"
               type="text"
               placeholder="Experience in Years"
               class="form-control"
-              id="{{ 'experienceInYears' + i }}"
+              id="{{'experienceInYears' + i }}"
               formControlName="experienceInYears"
               (blur)="logValidationData()"
             />
-            <span
-              class="help-block"
-              *ngIf="
-                skill.get('experienceInYears').errors?.required &&
-                skill.get('experienceInYears').touched
-              "
-            >
-              Experience is required
+            <span class="help-block">
+              <span>
+                {{ formErrors.experienceInYears }}
+              </span>
             </span>
           </div>
         </div>
 
-        <div class="form-group" [formGroupName]="i">
+        <div class="form-group">
           <label class="col-md-2 control-label">Proficiency</label>
           <div class="col-md-8">
             <label class="radio-inline">
               <input
-                id="{{ 'proficiency' + i }}"
+                id="{{'proficiency'+i}}"
                 type="radio"
                 value="beginner"
                 formControlName="proficiency"
-                [ngClass]="{
-                  'has-error':
-                    skill.get('proficiency').invalid &&
-                    skill.get('proficiency').touched
-                }"
               />Beginner
             </label>
             <label class="radio-inline">
               <input
-                id="{{ 'proficiency' + i }}"
+              id="{{'proficiency'+i}}"
                 type="radio"
                 value="intermediate"
                 formControlName="proficiency"
-                [ngClass]="{
-                  'has-error':
-                    skill.get('proficiency').invalid &&
-                    skill.get('proficiency').touched
-                }"
               />Intermediate
             </label>
             <label class="radio-inline">
               <input
-                id="{{ 'proficiency' + i }}"
+              id="{{'proficiency'+i}}"
                 type="radio"
                 value="advanced"
                 formControlName="proficiency"
-                [ngClass]="{
-                  'has-error':
-                    skill.get('proficiency').invalid &&
-                    skill.get('proficiency').touched
-                }"
               />Advanced
             </label>
-            <span
-              class="help-block"
-              *ngIf="
-                skill.get('proficiency').errors?.required &&
-                skill.get('proficiency').touched
-              "
-            >
-              Proficiency is required
+            <span class="help-block">
+              <span>
+                {{ formErrors.proficiency }}
+              </span>
             </span>
           </div>
-        </div>
+        </div>      
       </div>
-      <div class="form-group">
-        <div class="col-md-offset-2  col-md-4">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="addSkill()"
-            [disabled]="employeeForm.get('skills').invalid"
-          >
-            Add Skill
-          </button>
+      <div class="form-group" >
+          <div class="col-md-offset-2  col-md-4">
+            <button type="button" class="btn btn-primary" (click)="addSkill()"     [disabled]="employeeForm.get('skills').invalid">Add Skill</button>
+          </div>
         </div>
-        <div class="col-md-3" *ngIf="employeeForm.get('skills').length >= 1">
-          <button style="
-          width: 88px;
-          height: 41px;
-          margin-top :10px
-      "
-            type="button"
-            class="btn btn-danger btn-sm pull-right"
-            title="Delete Skill"
-            (click)="removeSkill(i)"
-          >Delete Skill</button>
-        </div>
-      </div>
     </div>
     <div class="panel-footer">
       <button class="btn btn-primary" type="submit" style="margin-right:10px">

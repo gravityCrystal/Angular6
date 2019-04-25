@@ -29,22 +29,22 @@ export class CreateEmployeeComponent implements OnInit {
       emailDomain: "Domain should dell.com"
     },
 
-    // skillName: {
-    //   required: "Enter skill"
-    // },
-    // proficiency: {
-    //   required: "Enter proficiemncy"
-    // },
-    // experienceInYears: {
-    //   required: "Enter experince"
-    // }
+    skillName: {
+      required: "Enter skill"
+    },
+    proficiency: {
+      required: "Enter proficiemncy"
+    },
+    experienceInYears: {
+      required: "Enter experince"
+    }
   };
   formErrors = {
-    // fullName: "",
-    // email: "",
-    // skillName: "",
-    // experienceInYears: "",
-    // proficiency: ""
+    fullName: "",
+    email: "",
+    skillName: "",
+    experienceInYears: "",
+    proficiency: ""
   };
   ngOnInit() {
     /// First way of creating forms
@@ -127,7 +127,7 @@ export class CreateEmployeeComponent implements OnInit {
     });
   }
 
-  logValidationData(group: FormGroup = this.employeeForm): void {
+  logValidationData(group: FormGroup): void {
     Object.keys(group.controls).forEach((key: string) => {
       const abstractControl = group.get(key);
      
@@ -151,25 +151,17 @@ export class CreateEmployeeComponent implements OnInit {
           // console.log('Key' +key, 'Value--', abstractControl.value)
         }
 
-        // if (abstractControl instanceof FormArray) {
-        //   for (const control of abstractControl.controls) {
-        //     if (control instanceof FormGroup) {
-        //      const validationMessages = this.validationMessages[key];
-        //   // console.log(validationMessages);
-        //   // console.log(abstractControl.errors);
-        //   for (const errorKey in abstractControl.errors) {
-        //     this.formErrors[key] += validationMessages[errorKey] + "  ";
-        //   }
-        //     }
-        //   }
-        //   // console.log('Key' +key, 'Value--', abstractControl.value)
-        // }
+        if (abstractControl instanceof FormArray) {
+          for (const control of abstractControl.controls) {
+            if (control instanceof FormGroup) {
+              this.logValidationData(control); 
+            }
+          }
+          // console.log('Key' +key, 'Value--', abstractControl.value)
+        }
       
     });
     console.log(this.formErrors, "----");
-  }
-  removeSkill(counter: number):void{
-    (<FormArray>this.employeeForm.get('skills')).removeAt(counter);
   }
 }
 
